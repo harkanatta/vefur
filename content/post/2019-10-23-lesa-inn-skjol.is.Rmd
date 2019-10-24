@@ -1,0 +1,88 @@
+---
+title: Myndir af þarabreiðum í Austanverðum Húnaflóa
+author: Valtýr
+date: '2019-10-23'
+slug: lesa-inn-skjol
+categories:
+  - R
+tags:
+  - code
+type: ''
+subtitle: ''
+image: ''
+---
+
+Það er eitthvað sem heillar við neðansjávarumhverfið, það er allt annar heimur undir yfirborðinu og mig vantaði einhverja afsökun til þess að gægjast þar undir en það er dýrt sport að kafa í köldum sjó. Mitt starf hjá Náttúrustofu Norðurlands vestra felur í sér að skoða náttúruna og stunda rannsóknir á henni. Flestar Náttúrustofur eru með verkefni á landi en minna er um athuganir í sjó. Mín verkefni tengjast nær öll sjónum sem er óheppilegt af því leiti að `r anicon::nia("ég er",animate="spin",speed="slow")` `r anicon::nia("mjög",animate="wrench",speed="slow")` `r anicon::nia("sjóveikur.",animate="float",speed="slow")` Ég frétti af [neðansjávardróna í ódýrari kantinum](https://www.sofarocean.com/products/trident) og langaði að hanna eitthvað verkefni í kringum hann. Þarabreiður eru skjól fyrir ýmsar sjávarlífverur og miðað við [vatnsbolinn](https://en.wikipedia.org/wiki/Water_column) eru þær heitur reitur út frá líffjölbreytileika. En hvernig átti ég að fá styrkfé til þess að skoða þarabreiður? Ég hafði enga sérþekkingu á þarabreiðum og gat ekki hannað áhugaverða rannsókn á þeim sisvona. Það þurfti að finna annað sjónarhorn, forvitnin ein er ekki næg ástæða til að veita fé til athuganna. Því var gaukað að mér að hugsanlega mætti finna verkefni í tengslum við nýtingu á þara. Ef einhver dugandi maður sæi ástæðu til að sækja þara á svæðinu og jafnvel vinna eitthvað úr honum í þorpinu gæti það orðið akkur fyrir samfélagið og því ástæða fyrir [Uppbyggingasjóð Norðurlands vestra](http://www.ssnv.is/is/uppbyggingarsjodur) til að leggja til fé. 
+
+Þessi sjóður er með tiltölulega lágar fjárhæðir í boði en styrkir fjöldamörg verkefni í landshlutanum. Hér að neðan má sjá dæmi um styrkina sem var úthlutað 2019 (sjá töflu \@ref[tab:tafla]). Við sóttum um fé til SSNV og fengum styrk upp á eina milljón fyrir verkefnið *Kortlagning þaraflóru í austanverðum Húnaflóa* árið 2017. 
+
+```{r tafla, echo=FALSE, message=FALSE, warning=FALSE, out.width='70%'}
+#https://stackoverflow.com/questions/1395528/scraping-html-tables-into-r-data-frames-using-the-xml-package
+library(XML)
+library(RCurl)
+library(rlist)
+library(DT)
+theurl <- getURL("http://www.ssnv.is/is/uppbyggingarsjodur/styrkhafar",.opts = list(ssl.verifypeer = FALSE) )
+tables <- htmlParse(theurl, encoding = 'UTF-8')
+tables <- readHTMLTable(tables)
+tables <- list.clean(tables, fun = is.null, recursive = FALSE)
+n.rows <- unlist(lapply(tables, function(t) dim(t)[1]))
+tafla <- tables[[which.max(n.rows)]]
+tafla[,3] <- gsub("\\.", "", tafla[,3])
+tafla[,3] <- as.numeric(tafla[,3])/1000000
+colnames(tafla) <- c("Styrkhafi","Verkefni","Milljónir")
+
+widgetframe::frameWidget(datatable(tafla))
+```
+
+Hafist var handa við að safna gögnum á meðan dróninn var ókominn. Við Óli, sem var sumarstarfsmaður árið 2017, græjuðum tvo kajaka sem kollegar okkar, Jim og Karin, eiga. Sjókajakarnir eru hannaðir að fyrirmynd eskimóakajakanna og það krefst talsverðrar tækni að sigla þeim. Ég var ekki fyrr kominn út í þegar mér hvolfdi. Dýpið var varla 50 sentimetrar sem var frekar óþægilegt því ég var hálfpartinn fastur milli botnsins og kajaksins. Það gekk mikið betur hjá Óla og komst hann frá þessu án þess að verða blautur. 
+
+```{r}
+#knitr::include_graphics(mynd af okkur Óla)
+```
+
+
+```{r yfirlitskort, echo=FALSE, error=FALSE, fig.align="center", message=FALSE, warning=FALSE, out.width='100%'}
+
+stodvar <- sf::read_sf(dsn="skjol/stodvar.shp")
+#dypi20 <- rgdal::readOGR(dsn="skjol/20mDypi.shp", verbose = FALSE)
+dypi10 <- rgdal::readOGR(dsn="skjol/10mlengjur.shp", verbose = FALSE)
+dyptarl <- rgdal::readOGR(dsn="skjol/dyptarl.shp", verbose = FALSE)
+
+library(raster)
+skogar <- shapefile("skjol/Konnun.shp")
+skogar@data$SV[c(15:16,19,21:23)] <- c("Hamarsbúð",    "Hindisvík",     "Finnsstaðanes",  "Bjargarbjörg",   "Kálfshamarsvík", "Sölvabakki")
+skogar <- skogar[skogar@data$STIG==3,]
+
+#,vefur=rep("https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#1",length(skogar@data$SV)))
+a <- list()
+b <- list()
+for (i in 1:length(dypi10@data[,1])) {
+ a[i] <- round(area(dypi10[i,1])/1000000)
+ b[i] <- as.character(dypi10[i,]$strond)
+}
+DF2 <- data.frame(Stadur=unlist(b),Km²=unlist(a),Dypi=rep("10 m",length(dypi10@data[,1])))
+DF <- data.frame(Stadur=unlist(b),Km2=unlist(a),Dypi=rep("10 m",length(skogar@data$SV)))
+library(plyr)
+DF <- ddply(DF,("Stadur"),summarize,km²=sum(Km2))
+
+images = c("https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk6/hafnir.jpeg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk4/samsett.jpeg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/Finnssta%C3%B0anes/hrossa.jpeg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk1/stodvar/st1/sk1-st1B.jpg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk2/samsett.jpeg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk5/stodvar/st1/sk5-st1.jpg",
+           "https://raw.githubusercontent.com/harkanatta/ssnv_trident/master/skjol/skogar/sk3/samsett.jpeg")
+
+urls=c("https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#1","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#3","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#18","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#21","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#11","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#20","https://harkanatta.github.io/orplast2019/slaedur/slaedur.html#7")
+
+litir <- RColorBrewer::brewer.pal(7,"Accent")
+library(mapview)     
+map <- mapview(dypi10,col.regions="#cb5600",map.types="Stamen.TerrainBackground", legend = FALSE,popup=leafpop::popupTable(DF2))+mapview(stodvar, popup = popupImage(images,width="500"),legend=FALSE,col.regions=litir,cex=14)+mapview(skogar,popup=leafpop::popupTable(DF),label=skogar@data$SV,legend=FALSE)+mapview(dyptarl,lwd=0.3,legend=FALSE)
+
+library(magrittr)
+img <- "https://github.com/harkanatta/ssnv_trident/blob/master/graphs/tvologo.jpg?raw=true"
+map %>% leafem::addLogo(img, width = '20%', height = '25%',offset.y = 20,offset.x = 80,alpha = 0.7) %>% leaflet.extras::addFullscreenControl(pseudoFullscreen = T)
+
+```
+
