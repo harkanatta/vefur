@@ -12,11 +12,9 @@ subtitle: ''
 image: ''
 ---
 
-Það er eitthvað sem heillar við neðansjávarumhverfið, það er allt annar heimur undir yfirborðinu og mig vantaði einhverja afsökun til þess að gægjast þar undir en það er dýrt sport að kafa í köldum sjó. Mitt starf hjá Náttúrustofu Norðurlands vestra felur í sér að skoða náttúruna og stunda rannsóknir á henni. Flestar Náttúrustofur eru með verkefni á landi en minna er um athuganir í sjó. Mín verkefni tengjast nær öll sjónum sem er óheppilegt af því leiti að `r anicon::nia("ég er",animate="spin",speed="slow")` `r anicon::nia("mjög",animate="wrench",speed="slow")` `r anicon::nia("sjóveikur.",animate="float",speed="slow")` Ég frétti af [neðansjávardróna í ódýrari kantinum](https://www.sofarocean.com/products/trident) og langaði að hanna eitthvað verkefni í kringum hann. Þarabreiður eru skjól fyrir ýmsar sjávarlífverur og miðað við [vatnsbolinn](https://en.wikipedia.org/wiki/Water_column) eru þær heitur reitur út frá líffjölbreytileika. En hvernig átti ég að fá styrkfé til þess að skoða þarabreiður? Ég hafði enga sérþekkingu á þarabreiðum og gat ekki hannað áhugaverða rannsókn á þeim sisvona. Það þurfti að finna annað sjónarhorn, forvitnin ein er ekki næg ástæða til að veita fé til athuganna. Því var gaukað að mér að hugsanlega mætti finna verkefni í tengslum við nýtingu á þara. Ef einhver dugandi maður sæi ástæðu til að sækja þara á svæðinu og jafnvel vinna eitthvað úr honum í þorpinu gæti það orðið akkur fyrir samfélagið og því ástæða fyrir [Uppbyggingasjóð Norðurlands vestra](http://www.ssnv.is/is/uppbyggingarsjodur) til að leggja til fé. 
+Það er eitthvað sem heillar við neðansjávarumhverfið, það er allt annar heimur undir yfirborðinu og mig vantaði einhverja afsökun til þess að gægjast þar undir en það er dýrt sport að kafa í köldum sjó. Mitt starf hjá Náttúrustofu Norðurlands vestra felur í sér að skoða náttúruna og stunda rannsóknir á henni. Flestar Náttúrustofur eru með verkefni á landi en minna er um athuganir í sjó. Mín verkefni tengjast nær öll sjónum sem er óheppilegt af því leiti að `r anicon::nia("ég er",animate="spin",speed="slow")` `r anicon::nia("mjög",animate="wrench",speed="slow")` `r anicon::nia("sjóveikur.",animate="float",speed="slow")` Ég frétti af [neðansjávardróna í ódýrari kantinum](https://www.sofarocean.com/products/trident) og langaði að hanna eitthvað verkefni í kringum hann. Þarabreiður eru skjól fyrir ýmsar sjávarlífverur og miðað við [vatnsbolinn](https://en.wikipedia.org/wiki/Water_column) eru þær heitur reitur út frá líffjölbreytileika. En hvernig átti ég að fá styrkfé til þess að skoða þarabreiður? Ég hafði enga sérþekkingu á þarabreiðum og gat ekki hannað áhugaverða rannsókn á þeim, sem ekki hefur verið gerð áður, sisvona. Það þurfti að finna annað sjónarhorn, forvitnin ein er ekki næg ástæða til að veita fé til athuganna en svo var því gaukað að mér að hugsanlega mætti finna verkefni í tengslum við nýtingu á þara. Ef einhver dugandi maður sæi ástæðu til að sækja þara á svæðinu og jafnvel vinna eitthvað úr honum í þorpinu gæti það orðið akkur fyrir samfélagið og því ástæða fyrir [Uppbyggingasjóð Norðurlands vestra](http://www.ssnv.is/is/uppbyggingarsjodur) til að leggja til fé. 
 
-Þessi sjóður er með tiltölulega lágar fjárhæðir í boði en styrkir fjöldamörg verkefni í landshlutanum. Hér að neðan má sjá dæmi um styrkina sem var úthlutað 2019 (sjá töflu \@ref[tab:tafla]). Við sóttum um fé til SSNV og fengum styrk upp á eina milljón fyrir verkefnið *Kortlagning þaraflóru í austanverðum Húnaflóa* árið 2017. 
-
-```{r tafla, echo=FALSE, message=FALSE, warning=FALSE, out.width='70%'}
+```{r tafla, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, out.width='70%'}
 #https://stackoverflow.com/questions/1395528/scraping-html-tables-into-r-data-frames-using-the-xml-package
 library(XML)
 library(RCurl)
@@ -31,16 +29,20 @@ tafla <- tables[[which.max(n.rows)]]
 tafla[,3] <- gsub("\\.", "", tafla[,3])
 tafla[,3] <- as.numeric(tafla[,3])/1000000
 colnames(tafla) <- c("Styrkhafi","Verkefni","Milljónir")
-
+M <- mean(tafla$Milljónir)
 widgetframe::frameWidget(datatable(tafla))
+
 ```
+
+Þessi sjóður styrkir yfir 70 verkefni í landshlutanum árið 2019 en er með tiltölulega lágar fjárhæðir í boði. Þó fá 11 verkefni loforð upp á 2 milljónir eða meira. Við sóttum um fé til SSNV og fengum styrk upp á eina milljón fyrir verkefnið *Kortlagning þaraflóru í austanverðum Húnaflóa* árið 2017. 
 
 Hafist var handa við að safna gögnum á meðan dróninn var ókominn. Við Óli, sem var sumarstarfsmaður árið 2017, græjuðum tvo kajaka sem kollegar okkar, Jim og Karin, eiga. Sjókajakarnir eru hannaðir að fyrirmynd eskimóakajakanna og það krefst talsverðrar tækni að sigla þeim. Ég var ekki fyrr kominn út í þegar mér hvolfdi. Dýpið var varla 50 sentimetrar sem var frekar óþægilegt því ég var hálfpartinn fastur milli botnsins og kajaksins. Það gekk mikið betur hjá Óla og komst hann frá þessu án þess að verða blautur. 
 
 ```{r}
-#knitr::include_graphics(mynd af okkur Óla)
+knitr::include_url("https://harkanatta.github.io/orplast2019/")
 ```
 
+Kúkipissirassi
 
 ```{r yfirlitskort, echo=FALSE, error=FALSE, fig.align="center", message=FALSE, warning=FALSE, out.width='100%'}
 
